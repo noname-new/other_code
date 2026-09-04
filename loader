@@ -5,7 +5,8 @@
 // @version      1.0.0
 // @description  Auto Piano 88 Key Bot Loader with Cache
 // @author       noname
-// @match        https://evowars.io/*
+// @match        https://pianoverse.net/*
+// @match        https://www.pianoverse.net/*
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
 
