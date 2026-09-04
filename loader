@@ -1,0 +1,120 @@
+
+// ==UserScript==
+// @name         Auto Piano 88 Key Bot Loader
+// @namespace    https://github.com/noname-new
+// @version      1.0.0
+// @description  Auto Piano 88 Key Bot Loader with Cache
+// @author       noname
+// @match        https://evowars.io/*
+// @grant        GM_xmlhttpRequest
+// ==/UserScript==
+
+(function () {
+    'use strict';
+
+    const URLS = [
+        "https://raw.githubusercontent.com/noname-new/other_code/refs/heads/main/auto_piano_88key_bot.js",
+    ];
+
+    const CACHE_KEY = "AUTO_PIANO_88KEY_CACHE";
+    const CACHE_TIME_KEY = "AUTO_PIANO_88KEY_CACHE_TIME";
+    const CACHE_DURATION = 10 * 60 * 1000; // 10 phút
+
+    function execute(code) {
+        try {
+            new Function(code)();
+            return true;
+        } catch (e) {
+            console.error("[AUTO PIANO] Script execution failed:", e);
+            return false;
+        }
+    }
+
+    function clearCache() {
+        localStorage.removeItem(CACHE_KEY);
+        localStorage.removeItem(CACHE_TIME_KEY);
+    }
+
+    function loadFromCache(ignoreExpiry = false) {
+        const code = localStorage.getItem(CACHE_KEY);
+        const time = Number(localStorage.getItem(CACHE_TIME_KEY) || 0);
+
+        if (!code) return false;
+
+        if (ignoreExpiry || Date.now() - time < CACHE_DURATION) {
+            console.log(
+                ignoreExpiry
+                    ? "[AUTO PIANO] Loaded from expired cache."
+                    : "[AUTO PIANO] Loaded from cache."
+            );
+
+            if (execute(code)) return true;
+
+            clearCache();
+        }
+
+        return false;
+    }
+
+    function saveCache(code) {
+        localStorage.setItem(CACHE_KEY, code);
+        localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+    }
+
+    function request(index = 0) {
+        if (index >= URLS.length) {
+            if (!loadFromCache(true)) {
+                console.error(
+                    "[AUTO PIANO] Unable to load script from server or cache."
+                );
+            }
+            return;
+        }
+
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: URLS[index],
+            timeout: 10000,
+
+            onload(res) {
+                const text = res.responseText || "";
+
+                if (
+                    res.status === 200 &&
+                    text.length > 100 &&
+                    !text.trim().startsWith("<")
+                ) {
+                    saveCache(text);
+
+                    console.log(
+                        "[AUTO PIANO] Loaded successfully from:",
+                        URLS[index]
+                    );
+
+                    execute(text);
+                } else {
+                    console.warn(
+                        "[AUTO PIANO] Server returned invalid data."
+                    );
+                    request(index + 1);
+                }
+            },
+
+            onerror() {
+                console.warn("[AUTO PIANO] Network error.");
+                request(index + 1);
+            },
+
+            ontimeout() {
+                console.warn("[AUTO PIANO] Request timeout.");
+                request(index + 1);
+            }
+        });
+    }
+
+    // Ưu tiên cache còn hạn
+    if (!loadFromCache(false)) {
+        request();
+    }
+})();
+
