@@ -1,256 +1,184 @@
-# 🎹 Auto Piano 88 Key Bot Loader
+# Auto Piano 88 Key Bot Loader
 
-A Tampermonkey userscript that automatically loads and runs the **Auto Piano 88 Key Bot** on [PianoVerse](https://pianoverse.net/).
-
-The loader provides:
-
-- ⚡ Automatic bot loading from GitHub
-- 💾 10-minute local caching
-- 🔄 Automatic updates when the cache expires
-- 🌐 Network error and timeout handling
-- 🛡️ Fallback to an expired cache if the server is unavailable
-- 📦 No need to manually download the bot script
-
----
-
-# 📋 Requirements
-
-You need:
-
-- A supported web browser
-- [Tampermonkey](https://www.tampermonkey.net/)
-- Access to PianoVerse
-
-The loader currently works on:
-
-```text
-https://pianoverse.net/*
-https://www.pianoverse.net/*
-```
+> [!WARNING]
+>
+> ## Known Issue: Key Mapping Bug
+>
+> The **88 Key** and **61 Key** versions currently have a key-mapping bug.
+>
+> Despite their names, **both versions currently only play 57 keys in practice**.
+>
+> | Version | Intended |  Actual |
+> | ------- | -------: | ------: |
+> | 88 Key  |  88 keys | 57 keys |
+> | 61 Key  |  61 keys | 57 keys |
+>
+> This is a **known bug** and is currently being worked on.
+>
+> The names **"88 Key"** and **"61 Key"** refer to their intended keyboard ranges. The current implementation does **not** correctly support the full number of keys.
+>
+> **Please keep this limitation in mind before using the bot.**
 
 ---
 
-# 1. Install Tampermonkey
+A Tampermonkey userscript that automatically loads and runs the Auto Piano 88 Key Bot on [PianoVerse](https://pianoverse.net/).
 
-First, install **Tampermonkey** for your browser.
+## Features
 
-Visit:
+* Automatically loads the bot from GitHub
+* Uses a 10-minute local cache
+* Automatically downloads the latest version after the cache expires
+* Handles network errors and request timeouts
+* Falls back to an expired cache if the server is unavailable
+* No need to manually download the bot
+
+## Requirements
+
+* A supported web browser
+* [Tampermonkey](https://www.tampermonkey.net/)
+* Access to [PianoVerse](https://pianoverse.net/)
+
+## Supported Website
+
+* [PianoVerse](https://pianoverse.net/)
+* [PianoVerse](https://www.pianoverse.net/)
+
+---
+
+# Installation
+
+## 1. Install Tampermonkey
+
+Go to:
 
 https://www.tampermonkey.net/
 
-Choose your browser and install the extension.
+Install Tampermonkey for your browser.
 
-After installation, make sure Tampermonkey is enabled in your browser's Extensions menu.
+After installation, make sure Tampermonkey is enabled.
 
----
-
-# 2. Create a New Userscript
+## 2. Create a New Userscript
 
 Open Tampermonkey.
 
 Go to:
 
-```text
-Dashboard
-```
-
-Then click:
-
-```text
-+
-```
-
-or:
-
-```text
-Create a new script
-```
+**Dashboard → Create a new script**
 
 Tampermonkey will open the userscript editor.
 
----
+## 3. Remove the Default Code
 
-# 3. Remove the Default Code
+Delete all of the default code created by Tampermonkey.
 
-Tampermonkey normally creates a sample userscript.
-
-For example:
-
-```javascript
-// ==UserScript==
-// @name         New Userscript
-// ...
-// ==/UserScript==
-
-// Your code here...
-```
-
-Delete **all** of the default code.
-
----
-
-# 4. Paste the Loader
+## 4. Paste the Loader
 
 Copy the complete **Auto Piano 88 Key Bot Loader** from this repository and paste it into the Tampermonkey editor.
 
-The script should start with:
-
-```javascript
-// ==UserScript==
-// @name         Auto Piano 88 Key Bot Loader
-```
-
-and end with:
-
-```javascript
-})();
-```
-
-Make sure this permission is also included:
+Make sure the script contains:
 
 ```javascript
 // @grant        GM_xmlhttpRequest
 ```
 
-The loader uses `GM_xmlhttpRequest()` to download the bot from GitHub.
+This permission is required because the loader uses `GM_xmlhttpRequest()` to download the bot from GitHub.
 
----
+## 5. Save the Script
 
-# 5. Save the Userscript
-
-After pasting the code, press:
+Press:
 
 ```text
 Ctrl + S
 ```
 
-or use:
+Then return to the Tampermonkey Dashboard.
 
-```text
-File → Save
-```
+Find:
 
-Then return to:
+**Auto Piano 88 Key Bot Loader**
 
-```text
-Tampermonkey → Dashboard
-```
+Make sure the script is enabled.
 
-You should see:
+## 6. Open PianoVerse
 
-```text
-Auto Piano 88 Key Bot Loader
-```
-
-Make sure the script is **enabled**.
-
----
-
-# 6. Open PianoVerse
-
-Visit:
+Go to:
 
 https://pianoverse.net/
 
-The loader will automatically run when the page matches one of its `@match` rules:
+The loader will automatically run when the website matches its `@match` rules.
 
-```javascript
-// @match        https://pianoverse.net/*
-// @match        https://www.pianoverse.net/*
-```
-
-You do **not** need to manually run the userscript.
+You do not need to manually run the userscript.
 
 ---
 
-# 7. How the Loader Works
+# How It Works
 
-When PianoVerse is opened, the loader first checks its local cache.
+When PianoVerse is opened, the loader first checks the local cache.
 
-The process is:
+If a valid cache exists:
 
 ```text
 Open PianoVerse
-       ↓
-Tampermonkey runs the Loader
-       ↓
-Check local cache
-       ↓
-Is the cache still valid?
-       ↙                ↘
-     YES                 NO
-      ↓                   ↓
-Run cached script     Download from GitHub
-                          ↓
-                     Save to cache
-                          ↓
-                       Run bot
+      ↓
+Tampermonkey runs the loader
+      ↓
+Check cache
+      ↓
+Cache is valid
+      ↓
+Load cached bot
+      ↓
+Execute bot
 ```
 
----
+If there is no valid cache:
 
-# 8. First Launch
+```text
+Open PianoVerse
+      ↓
+Tampermonkey runs the loader
+      ↓
+Check cache
+      ↓
+Cache is missing or expired
+      ↓
+Download bot from GitHub
+      ↓
+Save bot to localStorage
+      ↓
+Execute bot
+```
 
-On the first launch, there is no cached script.
+# Bot Source
 
-The loader downloads:
+The loader downloads the bot from:
 
 ```text
 https://raw.githubusercontent.com/noname-new/other_code/refs/heads/main/auto_piano_88key_bot.js
 ```
 
-The process is:
+The source file is:
 
-```text
-GitHub
-  ↓
-auto_piano_88key_bot.js
-  ↓
-Save to localStorage
-  ↓
-Execute the script
-```
+[auto_piano_88key_bot.js](https://github.com/noname-new/other_code/blob/main/auto_piano_88key_bot.js)
 
-If the download succeeds, the browser console will show:
+# Cache System
 
-```text
-[AUTO PIANO] Loaded successfully from:
-https://raw.githubusercontent.com/noname-new/other_code/refs/heads/main/auto_piano_88key_bot.js
-```
-
----
-
-# 9. Cache System
-
-The loader stores the downloaded script in `localStorage`.
-
-It uses these keys:
-
-```javascript
-const CACHE_KEY = "AUTO_PIANO_88KEY_CACHE";
-const CACHE_TIME_KEY = "AUTO_PIANO_88KEY_CACHE_TIME";
-```
+The loader stores the downloaded bot in `localStorage`.
 
 The cache duration is:
-
-```javascript
-const CACHE_DURATION = 10 * 60 * 1000;
-```
-
-This means the cache lasts for:
 
 ```text
 10 minutes
 ```
 
-### Example
+For example:
 
 ```text
 10:00
 ↓
-Download bot from GitHub
+Download bot
 ↓
-Save to cache
+Save cache
 
 10:05
 ↓
@@ -272,77 +200,42 @@ Download bot
 ↓
 Cache expired
 ↓
-Download the latest version from GitHub
+Download the latest version
 ```
 
----
+The cache helps reduce unnecessary requests and makes subsequent loads faster.
 
-# 10. Why Use a Cache?
+# Updating the Bot
 
-Without caching, the bot would need to be downloaded from GitHub every time PianoVerse is opened.
+You do not need to reinstall the Tampermonkey loader whenever the bot is updated.
 
-The cache helps:
-
-- ⚡ Reduce loading time
-- 📉 Reduce unnecessary GitHub requests
-- 🌐 Allow the bot to continue working when GitHub is temporarily unavailable
-- 🔄 Still receive updates automatically after the cache expires
-
----
-
-# 11. Network Error Handling
-
-The loader handles several types of request failures.
-
-If the GitHub request fails because of a network error, the loader will try the next URL in the `URLS` array.
-
-The current configuration contains:
-
-```javascript
-const URLS = [
-    "https://raw.githubusercontent.com/noname-new/other_code/refs/heads/main/auto_piano_88key_bot.js",
-];
-```
-
-If all URLs fail, the loader attempts to use the existing cache.
-
----
-
-# 12. Expired Cache Fallback
-
-One of the loader's features is the ability to use an **expired cache** when the server cannot be reached.
-
-For example:
+Simply update:
 
 ```text
-Cache expired
-      ↓
-Try to download latest version
-      ↓
-GitHub unavailable
-      ↓
-Use old cached version
+auto_piano_88key_bot.js
 ```
 
-The loader does this with:
+in the GitHub repository.
 
-```javascript
-loadFromCache(true)
-```
+After the current 10-minute cache expires, the loader will automatically download the updated version.
 
-The console will show:
+The update process is:
 
 ```text
-[AUTO PIANO] Loaded from expired cache.
+Update bot on GitHub
+        ↓
+Cache expires
+        ↓
+Loader downloads new version
+        ↓
+Save new cache
+        ↓
+Run new bot
 ```
 
-This means the bot is running from an older cached version.
+# Force a Fresh Download
 
----
-
-# 13. Checking the Loader
-
-If you want to check whether the loader is running, open Developer Tools.
+If you want to download the latest version immediately, open Developer Tools.
 
 Press:
 
@@ -350,129 +243,7 @@ Press:
 F12
 ```
 
-Then select:
-
-```text
-Console
-```
-
-You may see messages such as:
-
-```text
-[AUTO PIANO] Loaded successfully from: ...
-```
-
-or:
-
-```text
-[AUTO PIANO] Loaded from cache.
-```
-
-or:
-
-```text
-[AUTO PIANO] Loaded from expired cache.
-```
-
----
-
-# 14. If the Loader Does Not Run
-
-## Check 1 — Tampermonkey
-
-Open:
-
-```text
-Extensions
-→ Tampermonkey
-```
-
-Make sure Tampermonkey is enabled.
-
----
-
-## Check 2 — Userscript Status
-
-Open:
-
-```text
-Tampermonkey
-→ Dashboard
-```
-
-Find:
-
-```text
-Auto Piano 88 Key Bot Loader
-```
-
-Make sure it is enabled.
-
----
-
-## Check 3 — Website
-
-The loader only runs on PianoVerse:
-
-```text
-https://pianoverse.net/
-```
-
-or:
-
-```text
-https://www.pianoverse.net/
-```
-
-It will not run on unrelated websites.
-
----
-
-## Check 4 — Developer Console
-
-Press:
-
-```text
-F12
-```
-
-and open:
-
-```text
-Console
-```
-
-Look for JavaScript errors or `[AUTO PIANO]` messages.
-
----
-
-# 15. If GitHub Cannot Be Reached
-
-The loader validates the response before executing it.
-
-The response must:
-
-- Have HTTP status `200`
-- Contain more than 100 characters
-- Not start with `<`
-
-This helps prevent the loader from accidentally executing an HTML error page instead of JavaScript.
-
-If the downloaded data is invalid, the loader will try the next URL.
-
----
-
-# 16. Force a Fresh Download
-
-Normally, the loader waits until the 10-minute cache expires before downloading the latest version.
-
-If you want to force a fresh download immediately, open:
-
-```text
-F12 → Console
-```
-
-and run:
+Open the **Console** tab and run:
 
 ```javascript
 localStorage.removeItem("AUTO_PIANO_88KEY_CACHE");
@@ -485,180 +256,133 @@ Then reload PianoVerse:
 Ctrl + R
 ```
 
-The loader will download the bot from GitHub again.
+The loader will download the bot again from GitHub.
 
----
+# Network Error Handling
 
-# 17. Updating the Bot
+If the GitHub request fails because of a network error or timeout, the loader will try the next URL in the `URLS` array.
 
-You do **not** need to reinstall the Tampermonkey loader whenever the bot is updated.
+If all download attempts fail, the loader will try to use the existing cache.
 
-Simply update:
+If an expired cache is used, the console will show:
+
+```text
+[AUTO PIANO] Loaded from expired cache.
+```
+
+This allows the bot to continue working with an older version when the latest version cannot be downloaded.
+
+# Troubleshooting
+
+## The Loader Does Not Run
+
+Check that:
+
+1. Tampermonkey is installed and enabled.
+2. The userscript is enabled in the Tampermonkey Dashboard.
+3. You are using PianoVerse.
+4. The userscript contains the correct `@match` rules.
+
+The supported URLs are:
+
+```text
+https://pianoverse.net/*
+https://www.pianoverse.net/*
+```
+
+## Network Error
+
+Check your Internet connection and reload the page.
+
+## Request Timeout
+
+The GitHub request took too long.
+
+Try reloading the page.
+
+## Unable to Load Script From Server or Cache
+
+The loader could not download the bot and no usable cache was available.
+
+Check your Internet connection and the bot URL.
+
+## The Loader Works but the Bot Does Not
+
+The problem may be inside:
 
 ```text
 auto_piano_88key_bot.js
 ```
 
-in the GitHub repository.
+Open Developer Tools with `F12` and check the **Console** for JavaScript errors.
 
-Once the existing 10-minute cache expires, the loader will automatically download the updated version.
+# Console Messages
 
-The process is:
+The loader may display messages such as:
 
 ```text
-Update auto_piano_88key_bot.js
-             ↓
-           GitHub
-             ↓
-      Cache expires
-             ↓
-      Loader downloads
-             ↓
-       Save new cache
-             ↓
-        Run new bot
+[AUTO PIANO] Loaded successfully from:
 ```
 
----
-
-# 18. Changing the Bot URL
-
-The current bot URL is defined here:
-
-```javascript
-const URLS = [
-    "https://raw.githubusercontent.com/noname-new/other_code/refs/heads/main/auto_piano_88key_bot.js",
-];
+```text
+[AUTO PIANO] Loaded from cache.
 ```
 
-If the bot is moved to another location, update this URL.
-
-You can also add multiple URLs:
-
-```javascript
-const URLS = [
-    "https://example.com/bot.js",
-    "https://example.com/backup-bot.js",
-];
+```text
+[AUTO PIANO] Loaded from expired cache.
 ```
 
-The loader will try them in order.
+```text
+[AUTO PIANO] Network error.
+```
 
----
+```text
+[AUTO PIANO] Request timeout.
+```
 
-# 19. Project Structure
+```text
+[AUTO PIANO] Server returned invalid data.
+```
 
-The project can be understood as:
+# Project Structure
 
 ```text
 GitHub Repository
 │
 ├── auto_piano_88key_bot.js
-│       │
-│       │  Main bot
-│       ▼
+│   └── Main bot
 │
 └── README.md
-        │
-        │  Documentation
-        ▼
+    └── Documentation
 
 Tampermonkey
 │
 └── Auto Piano 88 Key Bot Loader
+    │
+    ├── Check cache
+    │
+    ├── Valid cache
+    │   └── Run cached bot
+    │
+    └── Missing/expired cache
         │
-        ├── Check cache
-        │
-        ├── Valid cache
-        │      └── Run cached bot
-        │
-        └── Expired/missing cache
-               │
-               └── Download bot
-                       │
-                       ├── Save cache
-                       └── Run bot
+        └── Download bot
+            │
+            ├── Save cache
+            └── Run bot
 ```
 
----
+# Links
 
-# 20. Quick Start
+* [PianoVerse](https://pianoverse.net/)
+* [GitHub](https://github.com/noname-new)
+* [Bot Source](https://github.com/noname-new/other_code/blob/main/auto_piano_88key_bot.js)
+* [Tampermonkey](https://www.tampermonkey.net/)
 
-Already have Tampermonkey installed?
+# Credits
 
-Just follow these steps:
+**Auto Piano 88 Key Bot Loader**
 
-```text
-1. Open Tampermonkey
-        ↓
-2. Create a new userscript
-        ↓
-3. Paste the Auto Piano 88 Key Bot Loader
-        ↓
-4. Save with Ctrl + S
-        ↓
-5. Enable the userscript
-        ↓
-6. Open pianoverse.net
-        ↓
-7. The loader automatically downloads the bot
-        ↓
-8. The bot is executed automatically
-```
+Author: `noname`
 
----
-
-# ⚠️ Troubleshooting
-
-### `Network error`
-
-Check your Internet connection and reload PianoVerse.
-
-### `Request timeout`
-
-The GitHub server did not respond within the configured timeout.
-
-Try reloading the page.
-
-### `Server returned invalid data`
-
-The downloaded response did not pass the loader's validation checks.
-
-Check whether the bot URL is correct.
-
-### `Unable to load script from server or cache`
-
-The loader could not download the bot and no usable cache was available.
-
-Check your Internet connection and the GitHub URL.
-
-### The loader loads successfully, but the bot does not work
-
-This means the loader itself is working, but there may be an error inside:
-
-```text
-auto_piano_88key_bot.js
-```
-
-Open:
-
-```text
-F12 → Console
-```
-
-and check for JavaScript errors.
-
----
-
-# 🔗 Links
-
-- **PianoVerse:** https://pianoverse.net/
-- **GitHub:** https://github.com/noname-new
-- **Bot source:** https://github.com/noname-new/other_code/blob/main/auto_piano_88key_bot.js
-- **Tampermonkey:** https://www.tampermonkey.net/
-
----
-
-# ⭐ Support
-
-If you find this project useful, consider giving the repository a ⭐ Star!
+GitHub: [noname-new](https://github.com/noname-new)
