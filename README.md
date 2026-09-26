@@ -73,7 +73,8 @@ Delete all of the default code created by Tampermonkey.
 
 ## 4. Paste the Loader
 
-Copy the complete **Auto Piano 88 Key Bot Loader** from this repository and paste it into the Tampermonkey editor.
+Copy the complete **loader** from this repository and paste it into the Tampermonkey editor.
+https://raw.githubusercontent.com/noname-new/other_code/refs/heads/main/loader.js
 
 Make sure the script contains:
 
