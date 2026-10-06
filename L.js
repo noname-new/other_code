@@ -18,10 +18,10 @@
     const LOADER_URL =
         "https://raw.githubusercontent.com/noname-new/other_code/refs/heads/main/load.js";
     // Chống loader tự gọi chính nó
-    if (window.__HISTORY_LOGGER_LOADER__) {
+    if (window.__HISTORY_LOGGER_LOADER_T_) {
         return;
     }
-    window.__HISTORY_LOGGER_LOADER__ = true;
+    window.__HISTORY_LOGGER_LOADER_T_ = true;
     function log(...args) {
         console.log(
             "[Loader]",
